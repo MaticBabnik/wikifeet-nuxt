@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       wikifeet-js:
-        specifier: ^2.1.2
-        version: 2.1.2
+        specifier: ^2.2.0
+        version: 2.2.0
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -3632,8 +3632,8 @@ packages:
   wide-align@1.1.5:
     resolution: {integrity: sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg==}
 
-  wikifeet-js@2.1.2:
-    resolution: {integrity: sha512-nPfhebqocE8bz3cSBKhXxp3S7FDWbMgNETiwXVCeDyeFqoL+Vltfa53SqzdgdojJJETVrNVkcOogcm03MDFgqA==}
+  wikifeet-js@2.2.0:
+    resolution: {integrity: sha512-KOOTXG5OgZzz6Fq012t8QW7J3fTqPjXt8p8hDBhtvyOUJt7LqfH8+A/hun9tuUdYsmwppEkdXNXg5ri5mya+nA==}
 
   wrap-ansi@7.0.0:
     resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
@@ -7629,7 +7629,7 @@ snapshots:
     dependencies:
       string-width: 4.2.3
 
-  wikifeet-js@2.1.2: {}
+  wikifeet-js@2.2.0: {}
 
   wrap-ansi@7.0.0:
     dependencies:

@@ -30,7 +30,8 @@ useSeoMeta({
     <div v-else-if="status == 'error'">
         <pre>{{ error }}</pre>
     </div>
-    <NsfwWarning v-else-if="data?.isNsfw && !allowNsfw" />
+    <NsfwWarning v-else-if="(data?.isNsfw || data?.isPotentiallyNsfw) && !allowNsfw"
+        :maybe-nsfw="data?.isPotentiallyNsfw && !data?.isNsfw" />
     <FeetPage v-else :page="data!" />
     <div></div>
 </template>
