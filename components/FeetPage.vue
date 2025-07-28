@@ -62,19 +62,13 @@ const gallery = computed(() => {
     return sorted.value.slice(start, end);
 });
 
-// Sync state with query parameters
-const syncQueryParams = () => {
-    // Construct new query params based on the current state
-    const queryParams = {
-        s: sort.value,
-        t: tags.value.length > 0 ? tags.value.join(",") : undefined,
-        n: pageSize.value.toString(),
-        p: galleryPage.value.toString(),
-    };
+const siteName = computed(() => {
+    if (props.page.isPotentiallyNsfw) return "wikiFeet Men";
+    if (props.page.isNsfw) return "wikiFeetX";
 
-    // Update the route query parameters
-    router.replace({ query: { ...route.query, ...queryParams } });
-};
+    return "wikiFeet";
+})
+
 
 onMounted(() => {
     const query = route.query;
@@ -124,49 +118,29 @@ watch(galleryPage, () =>
             <h1 class="text-4xl">{{ page.name }}</h1>
 
             <p>
-                <span class="dark:text-gray-300 text-gray-700 font-medium"
-                    >Birthday:</span
-                >
+                <span class="dark:text-gray-300 text-gray-700 font-medium">Birthday:</span>
                 {{ page.birthDate }} ({{ page.birthplace }})
             </p>
             <p>
-                <span class="dark:text-gray-300 text-gray-700 font-medium"
-                    >Shoe size:</span
-                >
+                <span class="dark:text-gray-300 text-gray-700 font-medium">Shoe size:</span>
                 {{ page.shoeSize }}
             </p>
-            <UButton
-                :to="page.url"
-                leading-icon="i-heroicons-link-16-solid"
-                variant="ghost"
-                size="sm"
-            >
-                {{ page.isNsfw ? "wikiFeetX" : "wikiFeet" }}
+            <UButton :to="page.url" leading-icon="i-heroicons-link-16-solid" variant="ghost" size="sm">
+                {{ siteName }}
             </UButton>
         </div>
 
-        <div
-            id="rating"
-            class="flex flex-row items-center gap-2 max-md:justify-center"
-        >
+        <div id="rating" class="flex flex-row items-center gap-2 max-md:justify-center">
             <div class="flex flex-col items-center">
                 <span class="text-6xl">
                     {{ page.rating.average.toFixed(2) }}
                 </span>
                 <span class="text-sm"> ({{ page.rating.count }} votes) </span>
                 <div class="relative w-fit">
-                    <UIcon
-                        v-for="_ in 5"
-                        size="24px"
-                        name="i-heroicons-star-solid"
-                        class="text-yellow-400"
-                    />
-                    <div
-                        class="absolute top-0 right-0 backdrop-saturate-0 h-full"
-                        :style="{
-                            width: `${100 - page.rating.average / 0.05}%`,
-                        }"
-                    >
+                    <UIcon v-for="_ in 5" size="24px" name="i-heroicons-star-solid" class="text-yellow-400" />
+                    <div class="absolute top-0 right-0 backdrop-saturate-0 h-full" :style="{
+                        width: `${100 - page.rating.average / 0.05}%`,
+                    }">
                         <!--Desaturate-->
                     </div>
                 </div>
@@ -188,72 +162,33 @@ watch(galleryPage, () =>
 
     <UDivider class="my-4" />
 
-    <div
-        class="flex flex-row flex-wrap gap-2 justify-between sticky top-0 bg-white dark:bg-gray-900 py-2"
-    >
-        <USelectMenu
-            class="w-36"
-            icon="i-heroicons-funnel-solid"
-            placeholder="Filter"
-            :options="page.tags"
-            v-model="tags"
-            multiple
-        />
+    <div class="flex flex-row flex-wrap gap-2 justify-between sticky top-0 bg-white dark:bg-gray-900 py-2">
+        <USelectMenu class="w-36" icon="i-heroicons-funnel-solid" placeholder="Filter" :options="page.tags"
+            v-model="tags" multiple />
 
-        <USelectMenu
-            class="w-36"
-            icon="i-heroicons-arrow-up-16-solid"
-            placeholder="Sort"
-            :options="SORTS"
-            v-model="sort"
-            value-attribute="id"
-        />
+        <USelectMenu class="w-36" icon="i-heroicons-arrow-up-16-solid" placeholder="Sort" :options="SORTS"
+            v-model="sort" value-attribute="id" />
 
-        <UPagination
-            v-model="galleryPage"
-            :total="filtered.length"
-            :page-count="pageSize"
-        />
+        <UPagination v-model="galleryPage" :total="filtered.length" :page-count="pageSize" />
 
-        <USelectMenu
-            class="w-36"
-            icon="i-heroicons-list-bullet"
-            placeholder="Items/page"
-            :options="PAGE_SIZES"
-            v-model="pageSize"
-            value-attribute="id"
-        />
+        <USelectMenu class="w-36" icon="i-heroicons-list-bullet" placeholder="Items/page" :options="PAGE_SIZES"
+            v-model="pageSize" value-attribute="id" />
     </div>
 
     <div class="grid feetpage-grid gap-4 my-4">
         <a :href="im.image" v-for="im in gallery" :key="im.id">
-            <img
-                class="aspect-1 w-full object-cover rounded-md img-smooth"
-                :src="im.image"
-                :title="`${im.id} ${im.resolution[0]}x${im.resolution[1]}`"
-            />
+            <img class="aspect-1 w-full object-cover rounded-md img-smooth" :src="im.image"
+                :title="`${im.id} ${im.resolution[0]}x${im.resolution[1]}`" />
         </a>
     </div>
 
     <UDivider class="my-4" />
 
     <h2 class="text-2xl my-4">See also:</h2>
-    <div
-        id="see-also"
-        class="flex flex-row gap-4 justify-center overflow-x-auto"
-    >
-        <ULink
-            v-for="sa in page.seeAlso"
-            class="rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 p-1"
-            :key="sa.slug"
-            :to="`/${sa.slug}`"
-            draggable="false"
-        >
-            <img
-                :src="fixThumb(sa.slug, sa.thumbs[0])"
-                class="w-36 h-36 rounded-lg object-cover"
-                draggable="false"
-            />
+    <div id="see-also" class="flex flex-row gap-4 justify-center overflow-x-auto">
+        <ULink v-for="sa in page.seeAlso" class="rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 p-1" :key="sa.slug"
+            :to="`/${sa.slug}`" draggable="false">
+            <img :src="fixThumb(sa.slug, sa.thumbs[0])" class="w-36 h-36 rounded-lg object-cover" draggable="false" />
             <h3 class="text-lg w-36">
                 {{ sa.name }}
             </h3>
