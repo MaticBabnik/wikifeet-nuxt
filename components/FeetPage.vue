@@ -12,10 +12,8 @@ const ratingBars = computed(() => {
     return counts.map((x) => `width: ${(x / max) * 100}%`);
 });
 
-function fixThumb(personSlug: string, thumbUrl: string) {
-    return thumbUrl
-        .replace("//thumbs.", "//pics.")
-        .replace(".com/", `.com/${personSlug}-feet-`);
+function fixThumb(personSlug: string, pid: string) {
+    return `https://pics.wikifeet.com/${personSlug}-feet-${pid}.jpg`
 }
 
 const PAGE_SIZES = [
